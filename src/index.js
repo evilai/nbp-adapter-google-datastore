@@ -2,6 +2,8 @@ import createGcloud from 'google-cloud';
 
 const createFakeLogger = () => ({ debug: () => null });
 
+export { default as googleDatastoreTunneling } from './tunneling';
+
 export default function({ platform, projectId, keyFilename, logger = createFakeLogger() }) {
     if (!platform) {
         throw new Error('Can\'t create Google Datastore instance in adapter. Please provide platform name.');
