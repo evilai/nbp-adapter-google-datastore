@@ -31,7 +31,33 @@ exports.default = function (_ref) {
     logger.debug('Google Cloud Datastore connected to ' + projectId + ' project');
 
     return function (entryId, senderId) {
-        return gcloud.datastore({ namespace: platform + '.' + entryId + '.' + senderId });
+        var datastore = gcloud.datastore({ namespace: platform + '.' + entryId + '.' + senderId });
+
+        return {
+            key: datastore.key,
+            save: function save(keyValueData) {
+                return new Promise(function (resolve, reject) {
+                    datastore.save(keyValueData, function (error) {
+                        if (error) {
+                            return reject(error);
+                        }
+
+                        resolve(keyValueData.data);
+                    });
+                });
+            },
+            get: function get(key) {
+                return new Promise(function (resolve, reject) {
+                    datastore.get(key, function (error, entity) {
+                        if (error) {
+                            return reject(error);
+                        }
+
+                        resolve(entity);
+                    });
+                });
+            }
+        };
     };
 };
 

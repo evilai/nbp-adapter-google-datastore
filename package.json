@@ -1,6 +1,6 @@
 {
   "name": "nbp-adapter-google-datastore",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Google Datastore adapter for Node.js Bot Platform",
   "main": "dist/index.js",
   "scripts": {

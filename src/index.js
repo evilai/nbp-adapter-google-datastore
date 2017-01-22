@@ -15,6 +15,28 @@ export default function({ platform, projectId, keyFilename, logger = createFakeL
     logger.debug(`Google Cloud Datastore connected to ${projectId} project`);
 
     return function(entryId, senderId) {
-        return gcloud.datastore({ namespace: `${platform}.${entryId}.${senderId}` });
+        const datastore = gcloud.datastore({ namespace: `${platform}.${entryId}.${senderId}` });
+
+        return {
+            key: datastore.key,
+            save: (keyValueData) => new Promise((resolve, reject) => {
+                datastore.save(keyValueData, error => {
+                    if (error) {
+                        return reject(error);
+                    }
+
+                    resolve(keyValueData.data);
+                })
+            }),
+            get: (key) => new Promise((resolve, reject) => {
+                datastore.get(key, (error, entity) => {
+                    if (error) {
+                        return reject(error);
+                    }
+
+                    resolve(entity);
+                })
+            })
+        }
     };
 }
