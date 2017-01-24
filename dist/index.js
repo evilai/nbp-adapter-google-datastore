@@ -15,23 +15,23 @@ Object.defineProperty(exports, 'googleDatastoreTunneling', {
 });
 
 exports.default = function (_ref) {
-    var platform = _ref.platform;
-    var projectId = _ref.projectId;
-    var keyFilename = _ref.keyFilename;
-    var _ref$logger = _ref.logger;
-    var logger = _ref$logger === undefined ? createFakeLogger() : _ref$logger;
+    var platform = _ref.platform,
+        projectId = _ref.projectId,
+        keyFilename = _ref.keyFilename,
+        _ref$logger = _ref.logger,
+        logger = _ref$logger === undefined ? createFakeLogger() : _ref$logger;
 
     if (!platform) {
         throw new Error('Can\'t create Google Datastore instance in adapter. Please provide platform name.');
     }
-    var gcloud = (0, _googleCloud2.default)({
+    var datastoreClient = (0, _datastore2.default)({
         projectId: projectId,
         keyFilename: keyFilename
     });
     logger.debug('Google Cloud Datastore connected to ' + projectId + ' project');
 
     return function (entryId, senderId) {
-        var datastore = gcloud.datastore({ namespace: platform + '.' + entryId + '.' + senderId });
+        var datastore = datastoreClient({ namespace: platform + '.' + entryId + '.' + senderId });
 
         return {
             key: datastore.key,
@@ -61,9 +61,9 @@ exports.default = function (_ref) {
     };
 };
 
-var _googleCloud = require('google-cloud');
+var _datastore = require('@google-cloud/datastore');
 
-var _googleCloud2 = _interopRequireDefault(_googleCloud);
+var _datastore2 = _interopRequireDefault(_datastore);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

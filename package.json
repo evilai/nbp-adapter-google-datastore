@@ -1,10 +1,10 @@
 {
   "name": "nbp-adapter-google-datastore",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Google Datastore adapter for Node.js Bot Platform",
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel ./src/index.js --preset babel-preset-es2015 --out-file ./dist/index.js",
+    "build": "babel ./src --preset babel-preset-es2015 --out-dir ./dist",
     "build:watch": "babel --watch ./src --preset babel-preset-es2015 --out-dir ./dist",
     "prepublish": "npm run build"
   },
@@ -27,6 +27,6 @@
     "eslint-config-evilai": "^0.0.1"
   },
   "dependencies": {
-    "google-cloud": "^0.43.0"
+    "@google-cloud/datastore": "^0.6.1"
   }
 }
