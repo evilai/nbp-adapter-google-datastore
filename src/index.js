@@ -8,14 +8,15 @@ export default function({ platform, projectId, keyFilename, logger = createFakeL
     if (!platform) {
         throw new Error('Can\'t create Google Datastore instance in adapter. Please provide platform name.');
     }
-    const datastoreClient = createDatastoreClient({
-        projectId,
-        keyFilename
-    });
+
     logger.debug(`Google Cloud Datastore connected to ${projectId} project`);
 
     return function(entryId, senderId) {
-        const datastore = datastoreClient({ namespace: `${platform}.${entryId}.${senderId}` });
+        const datastore = createDatastoreClient({
+            projectId,
+            keyFilename,
+            namespace: `${platform}.${entryId}.${senderId}`
+        });
 
         return {
             key: datastore.key,

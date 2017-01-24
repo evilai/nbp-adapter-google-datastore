@@ -24,14 +24,15 @@ exports.default = function (_ref) {
     if (!platform) {
         throw new Error('Can\'t create Google Datastore instance in adapter. Please provide platform name.');
     }
-    var datastoreClient = (0, _datastore2.default)({
-        projectId: projectId,
-        keyFilename: keyFilename
-    });
+
     logger.debug('Google Cloud Datastore connected to ' + projectId + ' project');
 
     return function (entryId, senderId) {
-        var datastore = datastoreClient({ namespace: platform + '.' + entryId + '.' + senderId });
+        var datastore = (0, _datastore2.default)({
+            projectId: projectId,
+            keyFilename: keyFilename,
+            namespace: platform + '.' + entryId + '.' + senderId
+        });
 
         return {
             key: datastore.key,
