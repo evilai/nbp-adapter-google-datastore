@@ -12,14 +12,18 @@ export default function({ platform, projectId, keyFilename, logger = createFakeL
     logger.debug(`Google Cloud Datastore connected to ${projectId} project`);
 
     return function(entryId, senderId) {
+        const namespace = `${platform}.${entryId}.${senderId}`;
         const datastore = createDatastoreClient({
             projectId,
             keyFilename,
-            namespace: `${platform}.${entryId}.${senderId}`
+            namespace
         });
 
         return {
-            key: datastore.key,
+            key: (keys) => datastore.key({
+                namespace,
+                path: keys
+            }),
             save: (keyValueData) => new Promise((resolve, reject) => {
                 datastore.save(keyValueData, error => {
                     if (error) {
@@ -31,6 +35,16 @@ export default function({ platform, projectId, keyFilename, logger = createFakeL
             }),
             get: (key) => new Promise((resolve, reject) => {
                 datastore.get(key, (error, entity) => {
+                    if (error) {
+                        console.log(error);
+                        return reject(error);
+                    }
+
+                    resolve(entity);
+                })
+            }),
+            delete: (key) => new Promise((resolve, reject) => {
+                datastore.delete(key, (error, entity) => {
                     if (error) {
                         return reject(error);
                     }

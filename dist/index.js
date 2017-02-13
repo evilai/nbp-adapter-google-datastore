@@ -28,14 +28,20 @@ exports.default = function (_ref) {
     logger.debug('Google Cloud Datastore connected to ' + projectId + ' project');
 
     return function (entryId, senderId) {
+        var namespace = platform + '.' + entryId + '.' + senderId;
         var datastore = (0, _datastore2.default)({
             projectId: projectId,
             keyFilename: keyFilename,
-            namespace: platform + '.' + entryId + '.' + senderId
+            namespace: namespace
         });
 
         return {
-            key: datastore.key,
+            key: function key(keys) {
+                return datastore.key({
+                    namespace: namespace,
+                    path: keys
+                });
+            },
             save: function save(keyValueData) {
                 return new Promise(function (resolve, reject) {
                     datastore.save(keyValueData, function (error) {
@@ -50,6 +56,18 @@ exports.default = function (_ref) {
             get: function get(key) {
                 return new Promise(function (resolve, reject) {
                     datastore.get(key, function (error, entity) {
+                        if (error) {
+                            console.log(error);
+                            return reject(error);
+                        }
+
+                        resolve(entity);
+                    });
+                });
+            },
+            delete: function _delete(key) {
+                return new Promise(function (resolve, reject) {
+                    datastore.delete(key, function (error, entity) {
                         if (error) {
                             return reject(error);
                         }
